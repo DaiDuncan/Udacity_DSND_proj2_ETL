@@ -8,7 +8,8 @@ from nltk.tokenize import word_tokenize
 from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
-from sklearn.externals import joblib
+#from sklearn.externals
+import joblib
 from sqlalchemy import create_engine
 
 
@@ -78,18 +79,24 @@ def index():
 @app.route('/go')
 def go():
     # save user input in query
-    query_message = request.args.get('query_message', '')
-    query_genre = request.args.get('query_genre', '')
-    query = query_message+' '+query_genre
+    message = request.args.get('query_message', '')
+    genre = request.args.get('query_genre', '')
+    genre_list = list(df['genre'].unique())
+    assert (genre in genre_list), "Please enter just one of the three genres"
+
+    query_dict = {'message': message, 'genre': genre}
+    query_df = pd.DataFrame.from_dict(query_dict, orient='index')
+    query_df = query_df.T
+
     # use model to predict classification for query
-    classification_labels = model.predict([query])[0]
+    classification_labels = model.predict(query_df)[0]
     classification_results = dict(zip(df.columns[4:], classification_labels))
 
     # This will render the go.html Please see that file.
     return render_template(
         'go.html',
-        query_message=query_message,
-        query_genre=query_genre,
+        query_message=message,
+        query_genre=genre,
         classification_result=classification_results
     )
 
