@@ -35,11 +35,12 @@
         <h1 class="text-center">Disaster Response Project</h1>
         <p class="text-center">Analyzing message data for disaster response</p>
         <hr />
-      
+
         <div class="row">
             <div class="col-lg-12 form-group-lg">
                 <form action="/go" method="get">
-                    <input type="text" class="form-control form-control-lg" name="query" placeholder="Enter a message to classify">
+                    <input type="text" class="form-control form-control-lg" name="query_message" placeholder="Enter a message to classify">
+                    <input type="text" class="form-control form-control-lg" name="query_genre" placeholder="Enter a genre to classify">
                     <div class="col-lg-offset-5">
                         <button type="submit" class="btn btn-lg btn-success">Classify Message</button>
                     </div>

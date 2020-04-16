@@ -9,11 +9,11 @@ def load_data(messages_filepath, categories_filepath):
 
     Combined the two datesets into one Dataframe
 
-    Args:
+    INPUT:
         messages_filepath: the filepath of the data(messages)
         categories_filepath: the filepath of the data(categories)
 
-    Returns:
+    OUTPUT:
         df: merge the two DataFrame into df based on the common feature 'id'
     '''
 
@@ -32,10 +32,10 @@ def clean_data(df):
     Extend the values in column 'categories'.
     Drop the duplicated records.
 
-    Args:
+    INPUT:
         df: raw data
 
-    Returns:
+    OUTPUT:
         df_cleaned: cleaned data
 
     '''
@@ -71,6 +71,8 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     '''Save the data from DataFrame to SQL-table
+
+    !!!You should define the name of the SQL-table.
     '''
 
     #engine is a .db file

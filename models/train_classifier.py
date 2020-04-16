@@ -24,6 +24,9 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.metrics import classification_report
 from sklearn.model_selection import GridSearchCV
 
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
+
 import pickle
 
 
@@ -110,7 +113,7 @@ def build_model(with_genre=True):
     if with_genre==True:
         preprocessor = ColumnTransformer(transformers=[
             ('token_transformer', token_transformer, 'message'),
-            ('genre_categories', OneHotEncoder(drop='first', dtype='int'),['genre'])
+            ('genre_categories', OneHotEncoder(drop='first', dtype='int'),['genre'])  #keep: drop='first'
             ], remainder='drop')
 
 
@@ -123,7 +126,7 @@ def build_model(with_genre=True):
                          ])
 
     parameters = {
-        'clf__estimator__n_estimators': [10, 20]
+        'clf__estimator__min_samples_split': [2, 3]   #'clf__estimator__n_estimators': 100
     }
 
     model = GridSearchCV(clf, param_grid=parameters)
@@ -204,7 +207,9 @@ def main():
         database_filepath, model_filepath, report_1_filepath, report_2_filepath = sys.argv[1:]
 
         #decide, whether use the infomation of 'genre' or not
-
+        flag_with_genre = True
+        #######
+        '''
         while 1:
             flag = input("Do you want to use the infomation of 'genre'(True or False)(default True):")
 
@@ -216,6 +221,8 @@ def main():
                 break
             else:
                 print("Please enter 'True' or 'False'")
+        '''
+        #######
 
 
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
