@@ -44,14 +44,33 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
 
+    #Bar: class information of the messages
+    df_class = df[df.columns[4:]]
+    df_count = (df_class==1).sum().sort_values(ascending=False)
+
+    class_rate = df_count / df.shape[0]
+    class_rate_names = list(class_rate.index)
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
+
+    '''
+    annotations=[]
+    for i, count in enumerate(genre_counts):
+        annotations.append(dict(text=str(count),
+                                font=dict(family='Arial', size=14,
+                                        color='rgb(248, 248, 255)'),
+                                showarrow=False))
+    '''
+
     graphs = [
         {
             'data': [
                 Bar(
                     x=genre_names,
-                    y=genre_counts
+                    y=genre_counts,
+                    text = genre_counts,
+                    textposition = 'outside'
                 )
             ],
 
@@ -62,6 +81,27 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+
+        {
+            'data': [
+                Bar(
+                    x=class_rate_names,
+                    y=class_rate,
+                    text=df_count,
+                    textposition = 'outside'
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Class Rate',
+                'yaxis': {
+                    'title': "Rate"
+                },
+                'xaxis': {
+                    'title': "Class"
                 }
             }
         }
@@ -79,11 +119,14 @@ def index():
 @app.route('/go')
 def go():
     # save user input in query
+    #get the query: one is 'message', another is 'genre'
     message = request.args.get('query_message', '')
     genre = request.args.get('query_genre', '')
+    #make sure this is the right information of 'genre'
     genre_list = list(df['genre'].unique())
     assert (genre in genre_list), "Please enter just one of the three genres"
 
+    #convert the data form to be adjusted as INPUT of the model
     query_dict = {'message': message, 'genre': genre}
     query_df = pd.DataFrame.from_dict(query_dict, orient='index')
     query_df = query_df.T

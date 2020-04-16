@@ -69,7 +69,7 @@ def tokenize(text):
     Wrangle the words with Normalization and Lemmatization.
 
     INPUT:
-        text: messages
+        text: a message
     OUTPUT:
         cleaned_tokens:(list)
     '''
