@@ -3,14 +3,14 @@
 ### Table of Contents
 1. [Project Overview](#ProjectOverview)
     - [Dataset](#Dataset)
-2. [Project Components](#ProjectComponents)
-    2.1 ETL Pipeline
-    2.2 ML Pipeline
+2. [Project Components](#ProjectComponents)  
+    2.1 ETL Pipeline  
+    2.2 ML Pipeline  
     2.3 Flask Web App
-3. [File Description](#FileDescription)
+3. [File Description](#FileDescription)  
     - Requirements
 4. [Instructions](#Instructions)
-5. [Result](#Result)
+5. [Result](#Result)  
 **Warning**
 **References**
 
@@ -55,7 +55,7 @@ This is a machine learning pipeline.
         - Use `CountVectorizer()` with tokenizer in Data Wrangling to make the words to vectors
         - Use `TfidfTransformer()` to normalize the value of the vectors
 
-    - Feature2: `genre` (INPUT)
+    - Feature2: `genre` (INPUT)  
     !!!**GUESS**: *maybe genre is related to the classification.*
         - Use `OneHotEncoder()`, change 'genre' objects to numbers  
 
@@ -76,7 +76,7 @@ Build a Web application by using Flask framework.
 
 ## 3 Files <a name="FileDescription"></a>
 <pre>
-D:.
+Workspace:.
 │  .gitignore
 │  LICENSE
 │  README.md
@@ -105,7 +105,7 @@ D:.
         train_classifier.py  //machine learning pipeline scripts to train and export a classifier
 </pre>
 
-- **Requirements**
+- **Requirements**  
 All of the requirements are captured in requirements.txt.
 ```python
 pip install -r requirements.txt
@@ -118,11 +118,11 @@ pip install -r requirements.txt
 
     - To run ETL pipeline that cleans data and stores in database
         ```python
-        python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db`
+        python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db
         ```
     - To run ML pipeline that trains classifier and saves
         ```python
-        python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl df_overview.csv df_accuracy.csv`
+        python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl df_overview.csv df_accuracy.csv
         ```
 
 2. Run the following command in the app's directory to run your web app.
@@ -143,8 +143,7 @@ pip install -r requirements.txt
 
 # Warning
 1. Develop enev  
-Latest python module of `joblib`  
-update:
+Latest version of module `joblib` can be direct imported:
 ```py
 import joblib #old version: from sklearn.externals import joblib
 ```
