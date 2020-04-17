@@ -121,7 +121,7 @@ def go():
     # save user input in query
     #get the query: one is 'message', another is 'genre'
     message = request.args.get('query_message', '')
-    genre = request.args.get('query_genre', '')
+    genre = request.args.get('select_genre', '')
     #make sure this is the right information of 'genre'
     genre_list = list(df['genre'].unique())
     assert (genre in genre_list), "Please enter just one of the three genres"

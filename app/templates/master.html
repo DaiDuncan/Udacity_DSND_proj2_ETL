@@ -39,9 +39,17 @@
         <div class="row">
             <div class="col-lg-12 form-group-lg">
                 <form action="/go" method="get">
+                    <p>Step1. Enter a message</p>
                     <input type="text" class="form-control form-control-lg" name="query_message" placeholder="Enter a message to classify">
-                    <!--add the text field to input the 'genre'-->
-                    <input type="text" class="form-control form-control-lg" name="query_genre" placeholder="Choose genre(only one): direct, social, news">
+
+                    <!-- Input the information of 'genre' -->
+                    <p>Step2. Select the genre of the message(default: direct)</p>
+                    <select name="select_genre" style="width:300px;" class="form-control form-control-lg">
+                      <option value="direct" selected>direct</option>
+                      <option value="news">news</option>
+                      <option value="social">social</option>
+                    </select>
+
                     <div class="col-lg-offset-5">
                         <button type="submit" class="btn btn-lg btn-success">Classify Message</button>
                     </div>
