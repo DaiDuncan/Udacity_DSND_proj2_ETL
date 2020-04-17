@@ -44,7 +44,7 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
 
-    #Bar: class information of the messages
+    # Bar Graph: categories information of the messages
     df_class = df[df.columns[4:]]
     df_count = (df_class==1).sum().sort_values(ascending=False)
 
@@ -54,14 +54,14 @@ def index():
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
 
-    '''
-    annotations=[]
-    for i, count in enumerate(genre_counts):
-        annotations.append(dict(text=str(count),
-                                font=dict(family='Arial', size=14,
-                                        color='rgb(248, 248, 255)'),
-                                showarrow=False))
-    '''
+
+    # annotations=[]
+    # for i, count in enumerate(genre_counts):
+    #     annotations.append(dict(text=str(count),
+    #                            font=dict(family='Arial', size=14,
+    #                                    color='rgb(248, 248, 255)'),
+    #                            showarrow=False))
+
 
     graphs = [
         {
@@ -119,14 +119,11 @@ def index():
 @app.route('/go')
 def go():
     # save user input in query
-    #get the query: one is 'message', another is 'genre'
+    # get two Inputs: one is 'message', another is 'genre'
     message = request.args.get('query_message', '')
     genre = request.args.get('select_genre', '')
-    #make sure this is the right information of 'genre'
-    genre_list = list(df['genre'].unique())
-    assert (genre in genre_list), "Please enter just one of the three genres"
 
-    #convert the data form to be adjusted as INPUT of the model
+    # adjust the datatype of two Inputs from strings to DataFrame
     query_dict = {'message': message, 'genre': genre}
     query_df = pd.DataFrame.from_dict(query_dict, orient='index')
     query_df = query_df.T

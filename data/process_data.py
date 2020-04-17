@@ -51,8 +51,7 @@ def clean_data(df):
 
     # !!!discover: there are 3 diffrent values in 'related'(0 1 2), but just a single value in 'child_alone'(0)
     # correct the error data
-    df.related.replace(2,1,inplace=True) #
-
+    categories.related.replace(2,1,inplace=True) #
     categories.drop(['child_alone'], axis=1, inplace=True)  #can also be reserved
 
     # drop the original categories columns
