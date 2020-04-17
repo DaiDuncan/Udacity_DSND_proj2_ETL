@@ -51,7 +51,7 @@ def load_data(database_filepath):
 
     #Get values of the categories as output Y
     category_names = df.columns[~(df.columns.isin(['id', 'message', 'original', 'genre']))]
-    Y = df[category_names].values
+    Y = df.iloc[:, 4:]   #
 
     #Get values of the messages as input X
     #!!!Guess: the values of 'genre' maybe important, put it together with the 'message'

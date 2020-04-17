@@ -41,17 +41,17 @@ def clean_data(df):
 
     # rename the columns of categories
     row = categories.iloc[0]
-    category_colnames = row.apply(lambda x: x[:-2])   #36 categories
+    category_colnames = row.apply(lambda x: x[:-2])   #
     categories.columns = category_colnames
 
     # (content of DataFrame)change string into 0 or 1
     for column in categories:
-        categories[column] = categories[column].apply(lambda x: int(x[-1:]))
+        categories[column] = categories[column].apply(lambda x: int(x[-1:])) #
 
 
     # !!!discover: there are 3 diffrent values in 'related'(0 1 2), but just a single value in 'child_alone'(0)
     # correct the error data
-    df.related.replace(2,1,inplace=True)
+    df.related.replace(2,1,inplace=True) #
 
     categories.drop(['child_alone'], axis=1, inplace=True)  #can also be reserved
 
@@ -59,7 +59,7 @@ def clean_data(df):
     df.drop(['categories'], axis=1, inplace=True)
 
     # concatenate df and categories
-    df = pd.concat([df, categories], axis=1)
+    df = pd.concat([df, categories], axis=1) #
 
     # drop duplicates
     df.drop_duplicates(inplace=True)   #273 duplicated records
