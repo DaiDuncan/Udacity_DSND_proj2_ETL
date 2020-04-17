@@ -20,53 +20,51 @@ def load_data(messages_filepath, categories_filepath):
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
 
-    #use 'id' to merge the two DataFrame into df
+    # use 'id' to merge the two DataFrame into df
     df = messages.merge(categories, on='id')
 
     return df
 
 
 def clean_data(df):
-    '''Data cleaning and wrangling
-
-    Extend the values in column 'categories'.
-    Drop the duplicated records.
+    '''Clean the DataFrame.
 
     INPUT:
-        df: raw data
+        df: merged DataFrame
 
     OUTPUT:
-        df_cleaned: cleaned data
+        df_cleaned: cleaned DataFrame
 
     '''
-
-    #(form of df)get the different categories as names for columns
-    #expand to diffrent columns
+    # (form of DataFrame)create a DataFrame with 36 categories
     categories = df['categories'].str.split(';', expand=True)
 
-    #get the names of columns
+    # rename the columns of categories
     row = categories.iloc[0]
-    category_colnames = [text[:-2] for text in row]   #36 categories
+    category_colnames = row.apply(lambda x: x[:-2])   #36 categories
     categories.columns = category_colnames
 
-    #(content of df)change datetype: 0-1 string to numeric
+    # (content of DataFrame)change string into 0 or 1
     for column in categories:
-        categories[column] = categories[column].str[-1]
-        categories[column] = pd.to_numeric(categories[column])
+        categories[column] = categories[column].apply(lambda x: int(x[-1:]))
 
 
-    #!!!discover: there are 3 diffrent values in 'related'(0 1 2), but just a single value in 'child_alone'(0)
-    #change the values of column 'related' into binary values
-    categories['related'][categories['related']==2] = 1
-    categories.drop(['child_alone'], axis=1, inplace=True)
+    # !!!discover: there are 3 diffrent values in 'related'(0 1 2), but just a single value in 'child_alone'(0)
+    # correct the error data
+    df.related.replace(2,1,inplace=True)
 
-    df_cleaned = df.drop(['categories'], axis=1)
-    df_cleaned = pd.concat([df_cleaned, categories], axis=1)
+    categories.drop(['child_alone'], axis=1, inplace=True)  #can also be reserved
 
-    #drop the duplicated records
-    df_cleaned.drop_duplicates(inplace=True)   #273 duplicated records
+    # drop the original categories columns
+    df.drop(['categories'], axis=1, inplace=True)
 
-    return df_cleaned
+    # concatenate df and categories
+    df = pd.concat([df, categories], axis=1)
+
+    # drop duplicates
+    df.drop_duplicates(inplace=True)   #273 duplicated records
+
+    return df
 
 
 def save_data(df, database_filename):
@@ -75,7 +73,7 @@ def save_data(df, database_filename):
     !!!You should define the name of the SQL-table.
     '''
 
-    #engine is a .db file
+    # engine is a .db file
     engine = create_engine('sqlite:///{}'.format(database_filename))
 
     database_tablename = "ETL_pipeline_cleaned"
@@ -89,7 +87,7 @@ def save_data(df, database_filename):
 
 def main():
 
-    #run python with .py message.csv categories.csv .db
+    # run python with .py message.csv categories.csv .db
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
