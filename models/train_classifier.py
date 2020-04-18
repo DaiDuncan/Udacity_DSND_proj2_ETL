@@ -49,12 +49,12 @@ def load_data(database_filepath):
     database_tablename = "ETL_pipeline_cleaned"   #!!!user should confirm it
     df = pd.read_sql_table(database_tablename, engine)
 
-    #Get values of the categories as output Y
-    category_names = df.columns[~(df.columns.isin(['id', 'message', 'original', 'genre']))]
-    Y = df.iloc[:, 4:]   #
+    # Get values of the categories as output Y
+    category_names = df.iloc[:, 4:].columns
+    Y = df.iloc[:, 4:].values   #
 
-    #Get values of the messages as input X
-    #!!!Guess: the values of 'genre' maybe important, put it together with the 'message'
+    # Get values of the messages as input X
+    # !!!Guess: the values of 'genre' maybe important, put it together with the 'message'
     X = df[['message', 'genre']]
 
     return X, Y, category_names
@@ -74,14 +74,14 @@ def tokenize(text):
         cleaned_tokens:(list)
     '''
 
-    #delete the Punctuations
+    # delete the Punctuations
     text = re.sub('\W+',' ', text).replace("_",' ')
 
-    #delete the Stop words
+    # delete the Stop words
     words = word_tokenize(text)
     tokens = [w for w in words if w not in stopwords.words('english')]
 
-    #Normalization and Lemmatization
+    # Normalization and Lemmatization
     lemmatizer = WordNetLemmatizer()
     cleaned_tokens = []
     for tok in tokens:
@@ -110,13 +110,13 @@ def build_model(with_genre=True):
         ('tfidf', TfidfTransformer())
         ])
 
+    # If we used the 'genre' Infos as the 2nd Feature
     if with_genre==True:
         preprocessor = ColumnTransformer(transformers=[
             ('token_transformer', token_transformer, 'message'),
             ('genre_categories', OneHotEncoder(drop='first', dtype='int'),['genre'])  #keep: drop='first'
             ], remainder='drop')
-
-
+    # Only use the 'message' Infos as the unique Feature
     elif with_genre==False:
         preprocessor = token_transformer
 
@@ -126,7 +126,8 @@ def build_model(with_genre=True):
                          ])
 
     parameters = {
-        'clf__estimator__min_samples_split': [2, 3]   #'clf__estimator__n_estimators': 100
+        'clf__estimator__min_samples_split': [2, 3]
+        # 'clf__estimator__n_estimators': 100
     }
 
     model = GridSearchCV(clf, param_grid=parameters)
@@ -152,9 +153,9 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
     report_output = dict()
     for idx, category_name in enumerate(category_names):
-        #if category_name=='child_alone':
-            #target_names = ['child_alone_0']
-        #else:
+        # if category_name=='child_alone':
+        #   target_names = ['child_alone_0']
+        # else:
         target_names = [category_name+"_0", category_name+"_1"]
         result = classification_report(Y_test[:, idx], Y_pred[:, idx],
                         target_names=target_names, output_dict=True)
@@ -206,9 +207,11 @@ def main():
     if len(sys.argv) == 5: #'python' is one part.
         database_filepath, model_filepath, report_1_filepath, report_2_filepath = sys.argv[1:]
 
-        #decide, whether use the infomation of 'genre' or not
+
+        # Use the infomation of 'genre' as the second Feature
         flag_with_genre = True
         #######
+        # decide, whether use the infomation of 'genre' or not
         '''
         while 1:
             flag = input("Do you want to use the infomation of 'genre'(True or False)(default True):")
@@ -259,7 +262,7 @@ def main():
             'as the first argument; the filepath of the pickle file to '\
             'save the model to as the second argument; the filepath of two '\
             'csv files to save the two Dateframe of the report. \n\n'\
-            'Example: python train_classifier.py ../data/DisasterResponse.db'\
+            'Example: python train_classifier.py ../data/DisasterResponse.db' \
             'classifier.pkl df_overview.csv df_accuracy.csv')
 
 
